@@ -1,10 +1,10 @@
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
-img = cv.imread('1.png', cv.IMREAD_GRAYSCALE)
+img = cv.imread('3.png', cv.IMREAD_GRAYSCALE)
 assert img is not None, "file could not be read, check with os.path.exists()"
 img2 = img.copy()
-template = cv.imread('dead.png', cv.IMREAD_GRAYSCALE)
+template = cv.imread('stop.png', cv.IMREAD_GRAYSCALE)
 assert template is not None, "file could not be read, check with os.path.exists()"
 w, h = template.shape[::-1]
 # All the 6 methods for comparison in a list
@@ -29,3 +29,5 @@ for meth in methods:
     plt.title('Detected Point'), plt.xticks([]), plt.yticks([])
     plt.suptitle(meth)
     plt.show()
+    # cv.imshow(template)
+    # cv.waitKey(0)

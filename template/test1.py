@@ -1,38 +1,16 @@
-import cv2
+import cv2 as cv
 import numpy as np
-
-def detect_sign(image_path, template_path):
-    # خواندن تصویر و قالب
-    image = cv2.imread(image_path)
-    template = cv2.imread(template_path)
-
-    # ابعاد قالب
-    template_height, template_width, _ = template.shape
-    image= cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    # تطابق الگو
-    result = cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED)
-    
-    # دریافت موقعیتهای تطابق بالا
-    threshold = 0.8
-    locations = np.where(result >= threshold)
-    if locations is not None:
-        for loc in locations:
-            # دریافت موقعیت بالا
-            top_left = loc[0]
-            bottom_right = (top_left[0] + template_width, top_left[1] + template_height)
-
-            # نمایش مستطیل بر روی تصویر اصلی
-            cv2.rectangle(image, top_left, bottom_right, (0, 255, 0), 2)
-
-        # نمایش تصویر با علائم تشخیص داده شده
-        cv2.imshow("Detected Signs", image)
-        cv2.waitKey(0)
-    else:
-        print("No signs found.")
-
-# مسیر تصویر و قالب
-image_path = "1.png"
-template_path = "dead.png"
-
-# تشخیص علائم
-detect_sign(image_path, template_path)
+from matplotlib import pyplot as plt
+img_rgb = cv.imread('1.png', cv.IMREAD_GRAYSCALE)
+assert img_rgb is not None, "file could not be read, check with os.path.exists()"
+# img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
+template = cv.imread('dead.png', cv.IMREAD_GRAYSCALE)
+assert template is not None, "file could not be read, check with os.path.exists()"
+w, h = template.shape[::-1]
+res = cv.matchTemplate(img_rgb,template,cv.TM_CCOEFF_NORMED)
+threshold = 0.4
+loc = np.where( res >= threshold)
+for pt in zip(*loc[::-1]):
+    cv.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
+cv.imshow('res.png',img_rgb)
+cv.waitKey(0)
